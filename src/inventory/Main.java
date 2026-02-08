@@ -1,4 +1,6 @@
 package inventory;
+import inventory.exception.InsufficientStockException;
+import inventory.exception.ItemNotFoundException;
 import java.util.Scanner;
 
 public class Main {
@@ -55,13 +57,18 @@ public class Main {
         int requests = sc.nextInt();
 
         for (int i = 0; i < requests; i++) {
-            System.out.print("Enter item name to request: ");
-            String name = sc.next();
+            try {
+                System.out.print("Enter item name to request: ");
+                String name = sc.next();
 
-            System.out.print("Enter quantity required: ");
-            int qty = sc.nextInt();
+                System.out.print("Enter quantity required: ");
+                int qty = sc.nextInt();
 
-            inventory.requestItem(name, qty);
+                inventory.requestItem(name, qty);
+            } catch (ItemNotFoundException | InsufficientStockException e) {
+                System.out.println("Error: " + e.getMessage());
+                i--; // 🔁 retry same request
+            }
         }
 
 
