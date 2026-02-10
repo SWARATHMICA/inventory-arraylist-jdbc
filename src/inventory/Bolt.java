@@ -2,8 +2,8 @@ package inventory;
 
 public class Bolt extends Item {
 
-    public Bolt(String name, int count, double price) {
-        super(name, count, price);
+    public Bolt(String type,String name, int count, double price) {
+        super(type,name, count, price);
     }
 
     @Override
