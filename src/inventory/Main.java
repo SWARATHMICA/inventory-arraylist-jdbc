@@ -11,8 +11,6 @@ public class Main {
     public static void main(String[] args) {
 
         try (Scanner sc = new Scanner(System.in)) {
-            System.out.print("Enter number of different items: ");
-            int n = sc.nextInt();
             
             
             Inventory inventory = new Inventory();
@@ -32,8 +30,8 @@ public class Main {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
-            for (int i = 0; i < n; i++) {
+            String choice= "yes";
+            while ("yes".equals(choice)) {
                 
                 System.out.println("\nEnter item type (nut / bolt): ");
                 String type = sc.next().toLowerCase();
@@ -57,13 +55,15 @@ public class Main {
                     
                     default -> {
                         System.out.println("Invalid item type!");
-                        i--;
+                        choice = "yes";
                         continue;
                     }
                 }
                 
                 inventory.addItem(item);
                 inventory.addItemToDatabase(name, count, type);
+                System.out.println("Do you want to add another item to the inventory?");
+                choice = sc.nextLine();
             }
             
             System.out.println("Total stock:");
