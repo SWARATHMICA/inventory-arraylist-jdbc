@@ -6,7 +6,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Inventory {
@@ -103,6 +105,26 @@ public class Inventory {
             e.printStackTrace();
         }
     }
+
+    public List<Item> getItemsList() {
+        return new ArrayList<>(items.values());
+    }
+
+    public void showAllItemsFromList(Map<String, Item> itemMap) {
+
+        // Convert Map values to List
+        List<Item> itemList = new ArrayList<>(itemMap.values());
+
+        // Display using List
+        for (Item item : itemList) {
+            System.out.println(
+                    item.getName() + " | " +
+                    item.getCount() + " | " +
+                    item.calculateValue()
+            );
+        }
+}
+
 
 
 }

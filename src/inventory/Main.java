@@ -66,8 +66,17 @@ public class Main {
                 choice = sc.nextLine();
             }
             
+
+            // Display by retrieving from inventory database
             System.out.println("Total stock:");
             inventory.showAllItems();
+            
+            
+            
+            //Display by using items list
+            System.out.println("Total stock (display using items list):");
+            inventory.showAllItemsFromList(inventory.getItems());
+            
             
             System.out.print("\nEnter number of requests: ");
             int requests = sc.nextInt();
