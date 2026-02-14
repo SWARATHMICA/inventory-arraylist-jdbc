@@ -1,10 +1,13 @@
 package inventory;
 import inventory.exception.InsufficientStockException;
 import inventory.exception.ItemNotFoundException;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class Main {
 
+    @SuppressWarnings("CallToPrintStackTrace")
     public static void main(String[] args) {
 
         try (Scanner sc = new Scanner(System.in)) {
@@ -13,6 +16,22 @@ public class Main {
             
             
             Inventory inventory = new Inventory();
+            try (Connection conn = DatabaseConnection.connect();
+                Statement stmt = conn.createStatement()) {
+
+                String sql = "CREATE TABLE IF NOT EXISTS items (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "name TEXT," +
+                        "quantity INTEGER," +
+                        "type TEXT" +
+                        ");";
+
+                stmt.execute(sql);
+                System.out.println("Table ready.");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             
             for (int i = 0; i < n; i++) {
                 
@@ -44,8 +63,10 @@ public class Main {
                 }
                 
                 inventory.addItem(item);
+                inventory.addItemToDatabase(name, count, type);
             }
             
+
             
             System.out.print("\nEnter number of requests: ");
             int requests = sc.nextInt();
@@ -69,6 +90,9 @@ public class Main {
             System.out.println("Net worth: " + inventory.calculateNetWorth());
             System.out.println("Most expensive item: " +
                     inventory.getMostExpensiveItem().getName());
+            System.out.println("Remaining stock:");
+            inventory.showAllItems();
+
         }
     }
 }

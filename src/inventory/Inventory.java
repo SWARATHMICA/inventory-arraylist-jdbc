@@ -1,14 +1,17 @@
 package inventory;
 
+import inventory.exception.InsufficientStockException;
+import inventory.exception.ItemNotFoundException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import inventory.exception.ItemNotFoundException;
-import inventory.exception.InsufficientStockException;
-
 public class Inventory {
 
-    private Map<String, Item> items = new HashMap<>();
+    private final Map<String, Item> items = new HashMap<>();
 
     public void addItem(Item item) {
         items.put(item.getName(), item);
@@ -54,6 +57,51 @@ public class Inventory {
             }
         }
         return maxItem;
+    }
+
+
+    @SuppressWarnings("CallToPrintStackTrace")
+    public void addItemToDatabase(String name, int quantity, String type) {
+
+        String sql = "INSERT INTO items(name, quantity, type) VALUES(?,?,?)";
+
+        try (Connection conn = DatabaseConnection.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, name);
+            pstmt.setInt(2, quantity);
+            pstmt.setString(3, type);
+
+            pstmt.executeUpdate();
+            System.out.println("Item saved to database!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @SuppressWarnings("CallToPrintStackTrace")
+    public void showAllItems() {
+
+        String sql = "SELECT * FROM items";
+
+        try (Connection conn = DatabaseConnection.connect();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                System.out.println(
+                        rs.getInt("id") + " | " +
+                        rs.getString("name") + " | " +
+                        rs.getInt("quantity") + " | " +
+                        rs.getString("type")
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
